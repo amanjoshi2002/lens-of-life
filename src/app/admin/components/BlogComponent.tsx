@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 
 interface Blog {
   _id: string;
@@ -34,8 +34,26 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>([]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number, type: string) => {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const data = await res.json();
+        setCategories(data.map((category: { name: string }) => category.name));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, index: number, type: string) => {
     const { value } = e.target;
     if (type === "paragraphs") {
       const newParagraphs = [...form.paragraphs];
@@ -109,20 +127,23 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
     return matchesTitle && matchesCategory;
   });
 
-  const uniqueCategories = Array.from(new Set(blogs.map((blog) => blog.category)));
-
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Add/Edit Blog</h2>
       <div className="grid grid-cols-1 gap-4">
-        <input
-          type="text"
+        <select
           name="category"
-          placeholder="Category"
           value={form.category}
           onChange={(e) => handleInputChange(e, 0, "category")}
           className="border border-gray-300 p-2 rounded text-black"
-        />
+        >
+          <option value="">Select Category</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           name="title"
@@ -196,7 +217,7 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
             className="border border-gray-300 p-2 rounded text-black"
           >
             <option value="">All Categories</option>
-            {uniqueCategories.map((category) => (
+            {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -208,14 +229,19 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
             <div key={blog._id} className="border-b border-gray-200 py-4">
               {editingBlogId === blog._id ? (
                 <div>
-                  <input
-                    type="text"
+                  <select
                     name="category"
-                    placeholder="Category"
                     value={form.category}
                     onChange={(e) => handleInputChange(e, 0, "category")}
                     className="border border-gray-300 p-2 rounded mb-2 w-full text-black"
-                  />
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     name="title"
