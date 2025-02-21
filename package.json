@@ -11,10 +11,13 @@
   "dependencies": {
     "cloudinary": "^2.5.1",
     "cookies-next": "^5.1.0",
+    "framer-motion": "^12.4.7",
+    "lucide-react": "^0.475.0",
     "mongoose": "^8.10.1",
     "next": "15.1.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",
