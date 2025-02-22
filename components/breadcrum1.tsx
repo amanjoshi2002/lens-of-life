@@ -22,12 +22,12 @@ const Breadcrumb1 = ({ imageUrl, text }: BreadcrumbProps) => {
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/30" />
       
-      <div className="relative flex h-full items-center px-4 sm:px-6 lg:px-8">
+      <div className="relative flex h-full items-end pb-8 px-4 sm:px-6 lg:px-8">
         <motion.h1
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-4xl font-bold text-white drop-shadow-lg"
+          className="text-4xl font-bold text-white drop-shadow-lg ml-4"
         >
           {text}
         </motion.h1>
