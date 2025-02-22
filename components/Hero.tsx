@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const Hero = () => {
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1623428335242-146aa129f6de?auto=format&fit=crop&q=80",
+      image: "/images/1.jpg",
       title: "LUXURY PORTRAIT",
       subtitle: "EXPERIENCE",
       text: "Capturing timeless reflections of your unique journey through motherhood and family life."
