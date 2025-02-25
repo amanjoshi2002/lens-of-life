@@ -180,7 +180,7 @@ export default function CategorySlider() {
                     </div>
                     <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
                     <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <Link href={`/blog/${post.slug}`}>
+                    <Link href={`/test`}>
                       <button className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Read More
                       </button>
