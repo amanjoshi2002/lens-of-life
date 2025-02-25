@@ -11,7 +11,7 @@ export default function BlogPage() {
   return (
     <>
       <Navbar />
-      <Hero />
+      <Hero title="Blog" subtitle="Stories, Tips, and Photography Insights" />
       <CategorySlider />
       <Footer />
     </>

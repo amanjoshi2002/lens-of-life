@@ -2,7 +2,12 @@
 
 import Image from 'next/image';
 
-export default function Hero() {
+interface HeroProps {
+  title: string;
+  subtitle: string;
+}
+
+export default function Hero({ title, subtitle }: HeroProps) {
   return (
     <div className="relative h-[60vh] w-full">
       <Image
@@ -14,8 +19,8 @@ export default function Hero() {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="mb-4 text-6xl font-serif">Blog</h1>
-          <p className="text-xl">Stories, Tips, and Photography Insights</p>
+          <h1 className="mb-4 text-6xl font-serif">{title}</h1>
+          <p className="text-xl">{subtitle}</p>
         </div>
       </div>
     </div>
