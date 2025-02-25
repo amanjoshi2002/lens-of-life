@@ -1,21 +1,19 @@
+'use client';
 
-import React from 'react'
+import Hero from '../../../components/Hero1';
+import Breadcrumb1 from '../../../components/breadcrum1';
+import Navbar from '../../../components/Navbar';
+import Footer from '../../../components/Footer';
+import CategorySlider from '../../../components/blogCategory';
+import BlogGrid from '../../../components/BlogGrid';
 
-import Hero from '../../../components/Hero'
-import Breadcrumb1 from '../../../components/breadcrum1'
-import Navbar from '../../../components/Navbar'
-import Footer from '../../../components/Footer'
-import CategorySlider from '../../../components/blogCategory'
-
-
-export default function page() {
+export default function BlogPage() {
   return (
-   <>
-<Navbar/>
-<Breadcrumb1 imageUrl={'/images/1.jpg'} text={'Blogs'}/>
-<CategorySlider/>
-<Footer/>
-
-   </>
-  )
+    <>
+      <Navbar />
+      <Hero />
+      <CategorySlider />
+      <Footer />
+    </>
+  );
 }

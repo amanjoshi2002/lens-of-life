@@ -1,39 +1,25 @@
-'use client'; 
-import { motion } from 'framer-motion';
+'use client';
 
-interface BreadcrumbProps {
-  imageUrl: string;
-  text: string;
-}
+import { ChevronRight, Home } from 'lucide-react';
+import Link from 'next/link';
 
-const Breadcrumb1 = ({ imageUrl, text }: BreadcrumbProps) => {
+export default function Breadcrumb1() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative h-64 w-full overflow-hidden rounded-lg shadow-lg"
-      style={{
-        backgroundImage: `url(${imageUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/30" />
-      
-      <div className="relative flex h-full items-end pb-8 px-4 sm:px-6 lg:px-8">
-        <motion.h1
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-4xl font-bold text-white drop-shadow-lg ml-4"
-        >
-          {text}
-        </motion.h1>
-      </div>
-    </motion.div>
+    <nav className="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 max-w-7xl mx-auto my-4" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+        <li className="inline-flex items-center">
+          <Link href="/" className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-pink-600">
+            <Home className="w-4 h-4 mr-2" />
+            Home
+          </Link>
+        </li>
+        <li>
+          <div className="flex items-center">
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">Blog</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
   );
-};
-
-export default Breadcrumb1;
+}

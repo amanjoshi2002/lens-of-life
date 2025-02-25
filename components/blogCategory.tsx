@@ -1,70 +1,202 @@
-'use client'; 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+'use client';
+
+import { useRef, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Calendar } from 'lucide-react';
 
 const categories = [
   {
-    name: "Category 1",
-    products: [
-      { name: "Product 1", image: "/product1.jpg", description: "High-quality material with a sleek design." },
-      { name: "Product 2", image: "/product2.jpg", description: "Perfect for everyday use and durability." },
-      { name: "Product 3", image: "/product3.jpg", description: "Innovative design with premium feel." },
-      { name: "Product 4", image: "/product4.jpg", description: "Reliable and efficient, best in class." },
+    name: 'Wedding',
+    posts: [
+      {
+        id: 1,
+        title: 'Comparing Different Wedding Photography Packages: What to Look For',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '02/10/2025',
+        excerpt: 'A comprehensive guide to help you choose the perfect wedding photography package for your special day.',
+        slug: 'comparing-wedding-photography-packages'
+      },
+      {
+        id: 2,
+        title: 'The Impact of Lighting on Wedding Photos: How to Get the Perfect Shots',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
+        date: '02/03/2025',
+        excerpt: 'Understanding the role of lighting in creating stunning wedding photographs.',
+        slug: 'impact-of-lighting-wedding-photos'
+      },
+      {
+        id: 3,
+        title: 'Choosing the Right Photographer for Your Wedding',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '01/28/2025',
+        excerpt: 'Tips for selecting the best photographer for your big day.',
+        slug: 'choosing-photographer-wedding'
+      },
+      {
+        id: 4,
+        title: 'Capturing the Perfect Moments: Wedding Photography Tips',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
+        date: '01/20/2025',
+        excerpt: 'Essential tips for capturing beautiful wedding moments.',
+        slug: 'wedding-photography-tips'
+      },
+      {
+        id: 5,
+        title: 'Post-Wedding Photography: What to Expect',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '01/15/2025',
+        excerpt: 'A guide to post-wedding photography sessions.',
+        slug: 'post-wedding-photography'
+      },
     ],
   },
   {
-    name: "Category 2",
-    products: [
-      { name: "Product 5", image: "/product5.jpg", description: "Elegant and stylish for all occasions." },
-      { name: "Product 6", image: "/product6.jpg", description: "Lightweight yet strong and durable." },
-      { name: "Product 7", image: "/product7.jpg", description: "A modern touch to your essentials." },
-      { name: "Product 8", image: "/product8.jpg", description: "Unmatched quality and premium design." },
+    name: 'Destination Wedding',
+    posts: [
+      {
+        id: 1,
+        title: 'Comparing Different Wedding Photography Packages: What to Look For',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '02/10/2025',
+        excerpt: 'A comprehensive guide to help you choose the perfect wedding photography package for your special day.',
+        slug: 'comparing-wedding-photography-packages'
+      },
+      {
+        id: 2,
+        title: 'The Impact of Lighting on Wedding Photos: How to Get the Perfect Shots',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
+        date: '02/03/2025',
+        excerpt: 'Understanding the role of lighting in creating stunning wedding photographs.',
+        slug: 'impact-of-lighting-wedding-photos'
+      },
+      {
+        id: 3,
+        title: 'Choosing the Right Photographer for Your Wedding',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '01/28/2025',
+        excerpt: 'Tips for selecting the best photographer for your big day.',
+        slug: 'choosing-photographer-wedding'
+      },
+      {
+        id: 4,
+        title: 'Capturing the Perfect Moments: Wedding Photography Tips',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
+        date: '01/20/2025',
+        excerpt: 'Essential tips for capturing beautiful wedding moments.',
+        slug: 'wedding-photography-tips'
+      },
+      {
+        id: 5,
+        title: 'Post-Wedding Photography: What to Expect',
+        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
+        date: '01/15/2025',
+        excerpt: 'A guide to post-wedding photography sessions.',
+        slug: 'post-wedding-photography'
+      },
     ],
-  },
+  }
 ];
 
 export default function CategorySlider() {
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  useEffect(() => {
+    const updateScrollButtons = () => {
+      if (sliderRef.current) {
+        setCanScrollLeft(sliderRef.current.scrollLeft > 0);
+        setCanScrollRight(
+          sliderRef.current.scrollLeft + sliderRef.current.clientWidth < sliderRef.current.scrollWidth
+        );
+      }
+    };
+    
+    if (sliderRef.current) {
+      sliderRef.current.addEventListener("scroll", updateScrollButtons);
+      updateScrollButtons();
+    }
+
+    const autoScroll = setInterval(() => {
+      if (sliderRef.current) {
+        const maxScrollLeft = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+        if (sliderRef.current.scrollLeft >= maxScrollLeft) {
+          sliderRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          sliderRef.current.scrollBy({ left: sliderRef.current.clientWidth, behavior: 'smooth' });
+        }
+      }
+    }, 3000); // Adjust the interval as needed
+
+    return () => {
+      sliderRef.current?.removeEventListener("scroll", updateScrollButtons);
+      clearInterval(autoScroll);
+    };
+  }, []);
+
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -sliderRef.current.clientWidth, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: sliderRef.current.clientWidth, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="space-y-12 p-6">
-      {categories.map((category, rowIndex) => (
-        <div key={rowIndex} className="overflow-hidden relative w-full p-6 border rounded-xl bg-gray-50 shadow-lg">
-          <motion.p 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute top-4 left-6 font-bold text-xl text-gray-800"
-          >
-            {category.name}
-          </motion.p>
-          <div className="relative w-full overflow-hidden">
-            <motion.div
-              className="flex space-x-6 mt-12"
-              animate={{ x: [0, -250, -500, -750, 0] }}
-              transition={{ ease: "linear", duration: 8, repeat: Infinity }}
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      {categories.map((category) => (
+        <div key={category.name} className="mb-12">
+          <h2 className="text-3xl font-bold mb-4">{category.name}</h2>
+          <div className="relative">
+            {canScrollLeft && (
+              <button
+                onClick={scrollLeft}
+                className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-300 rounded-full p-2 z-10"
+              >
+                &lt;
+              </button>
+            )}
+            <div
+              ref={sliderRef}
+              className="flex overflow-hidden scrollbar-hide snap-x snap-mandatory space-x-4"
             >
-              {[...category.products, ...category.products].map((product, index) => (
-                <motion.div 
-                  key={index} 
-                  className="min-w-[250px] bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="rounded-xl w-full h-48 object-cover"
-                  />
-                  <p className="text-center font-semibold mt-3 text-gray-900">{product.name}</p>
-                  <p className="text-center text-sm text-gray-600 mt-1">{product.description}</p>
-                  <motion.button 
-                    className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    Know More
-                  </motion.button>
-                </motion.div>
+              {category.posts.map((post) => (
+                <div key={post.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-[1.02] min-w-[calc(100%/3-1rem)] snap-start">
+                  <div className="relative h-64">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {post.date}
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
+                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                    <Link href={`/blog/${post.slug}`}>
+                      <button className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Read More
+                      </button>
+                    </Link>
+                  </div>
+                </div>
               ))}
-            </motion.div>
+            </div>
+            {canScrollRight && (
+              <button
+                onClick={scrollRight}
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-300 rounded-full p-2 z-10"
+              >
+                &gt;
+              </button>
+            )}
           </div>
         </div>
       ))}
