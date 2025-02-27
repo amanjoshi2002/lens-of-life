@@ -1,106 +1,60 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useId } from 'react';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 
-const categories = [
-  {
-    name: 'Wedding',
-    posts: [
-      {
-        id: 1,
-        title: 'Comparing Different Wedding Photography Packages: What to Look For',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '02/10/2025',
-        excerpt: 'A comprehensive guide to help you choose the perfect wedding photography package for your special day.',
-        slug: 'comparing-wedding-photography-packages'
-      },
-      {
-        id: 2,
-        title: 'The Impact of Lighting on Wedding Photos: How to Get the Perfect Shots',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
-        date: '02/03/2025',
-        excerpt: 'Understanding the role of lighting in creating stunning wedding photographs.',
-        slug: 'impact-of-lighting-wedding-photos'
-      },
-      {
-        id: 3,
-        title: 'Choosing the Right Photographer for Your Wedding',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '01/28/2025',
-        excerpt: 'Tips for selecting the best photographer for your big day.',
-        slug: 'choosing-photographer-wedding'
-      },
-      {
-        id: 4,
-        title: 'Capturing the Perfect Moments: Wedding Photography Tips',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
-        date: '01/20/2025',
-        excerpt: 'Essential tips for capturing beautiful wedding moments.',
-        slug: 'wedding-photography-tips'
-      },
-      {
-        id: 5,
-        title: 'Post-Wedding Photography: What to Expect',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '01/15/2025',
-        excerpt: 'A guide to post-wedding photography sessions.',
-        slug: 'post-wedding-photography'
-      },
-    ],
-  },
-  {
-    name: 'Destination Wedding',
-    posts: [
-      {
-        id: 1,
-        title: 'Comparing Different Wedding Photography Packages: What to Look For',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '02/10/2025',
-        excerpt: 'A comprehensive guide to help you choose the perfect wedding photography package for your special day.',
-        slug: 'comparing-wedding-photography-packages'
-      },
-      {
-        id: 2,
-        title: 'The Impact of Lighting on Wedding Photos: How to Get the Perfect Shots',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
-        date: '02/03/2025',
-        excerpt: 'Understanding the role of lighting in creating stunning wedding photographs.',
-        slug: 'impact-of-lighting-wedding-photos'
-      },
-      {
-        id: 3,
-        title: 'Choosing the Right Photographer for Your Wedding',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '01/28/2025',
-        excerpt: 'Tips for selecting the best photographer for your big day.',
-        slug: 'choosing-photographer-wedding'
-      },
-      {
-        id: 4,
-        title: 'Capturing the Perfect Moments: Wedding Photography Tips',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000',
-        date: '01/20/2025',
-        excerpt: 'Essential tips for capturing beautiful wedding moments.',
-        slug: 'wedding-photography-tips'
-      },
-      {
-        id: 5,
-        title: 'Post-Wedding Photography: What to Expect',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000',
-        date: '01/15/2025',
-        excerpt: 'A guide to post-wedding photography sessions.',
-        slug: 'post-wedding-photography'
-      },
-    ],
-  }
-];
+interface Blog {
+  _id: string;
+  category: string;
+  title: string;
+  headPhotoLink: string;
+  date?: string;
+}
+
+interface CategoryGroup {
+  name: string;
+  posts: Blog[];
+}
 
 export default function CategorySlider() {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const buttonId = useId();
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [categories, setCategories] = useState<CategoryGroup[]>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch('/api/blogs');
+        if (response.ok) {
+          const blogs: Blog[] = await response.json();
+          
+          // Group blogs by category
+          const groupedBlogs = blogs.reduce((acc: { [key: string]: Blog[] }, blog) => {
+            if (!acc[blog.category]) {
+              acc[blog.category] = [];
+            }
+            acc[blog.category].push(blog);
+            return acc;
+          }, {});
+
+          // Convert to array format needed for rendering
+          const categoriesArray = Object.entries(groupedBlogs).map(([name, posts]) => ({
+            name,
+            posts
+          }));
+
+          setCategories(categoriesArray);
+        }
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   useEffect(() => {
     const updateScrollButtons = () => {
@@ -126,7 +80,7 @@ export default function CategorySlider() {
           sliderRef.current.scrollBy({ left: sliderRef.current.clientWidth, behavior: 'smooth' });
         }
       }
-    }, 3000); // Adjust the interval as needed
+    }, 3000);
 
     return () => {
       sliderRef.current?.removeEventListener("scroll", updateScrollButtons);
@@ -156,6 +110,8 @@ export default function CategorySlider() {
               <button
                 onClick={scrollLeft}
                 className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-300 rounded-full p-2 z-10"
+                suppressHydrationWarning
+                id={`${buttonId}-left-${category.name}`}
               >
                 &lt;
               </button>
@@ -165,23 +121,28 @@ export default function CategorySlider() {
               className="flex overflow-hidden scrollbar-hide snap-x snap-mandatory space-x-4"
             >
               {category.posts.map((post) => (
-                <div key={post.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-[1.02] min-w-[calc(100%/3-1rem)] snap-start">
+                <div key={post._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-[1.02] min-w-[calc(100%/3-1rem)] snap-start">
                   <div className="relative h-64">
                     <img
-                      src={post.image}
+                      src={post.headPhotoLink}
                       alt={post.title}
                       className="object-cover w-full h-full"
                     />
                   </div>
                   <div className="p-4">
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {post.date}
-                    </div>
+                    {post.date && (
+                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {post.date}
+                      </div>
+                    )}
                     <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <Link href={`/test`}>
-                      <button className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    <Link href={`/blog/${post._id}`}>
+                      <button 
+                        className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                        suppressHydrationWarning
+                        id={`${buttonId}-read-${post._id}`}
+                      >
                         Read More
                       </button>
                     </Link>
@@ -193,6 +154,8 @@ export default function CategorySlider() {
               <button
                 onClick={scrollRight}
                 className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-300 rounded-full p-2 z-10"
+                suppressHydrationWarning
+                id={`${buttonId}-right-${category.name}`}
               >
                 &gt;
               </button>

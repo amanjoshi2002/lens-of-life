@@ -136,6 +136,7 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
           value={form.category}
           onChange={(e) => handleInputChange(e, 0, "category")}
           className="border border-gray-300 p-2 rounded text-black"
+          suppressHydrationWarning
         >
           <option value="">Select Category</option>
           {categories.map((category) => (
@@ -151,6 +152,7 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
           value={form.title}
           onChange={(e) => handleInputChange(e, 0, "title")}
           className="border border-gray-300 p-2 rounded text-black"
+          suppressHydrationWarning
         />
         <input
           type="text"
@@ -159,6 +161,7 @@ const BlogComponent = ({ blogs, fetchBlogs, handleDeleteBlog }: BlogComponentPro
           value={form.headPhotoLink}
           onChange={(e) => handleInputChange(e, 0, "headPhotoLink")}
           className="border border-gray-300 p-2 rounded text-black"
+          suppressHydrationWarning
         />
         {form.paragraphs.map((paragraph, index) => (
           <div key={index} className="flex gap-2 mb-2">
