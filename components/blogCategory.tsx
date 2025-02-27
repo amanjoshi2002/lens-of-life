@@ -103,7 +103,7 @@ export default function CategorySlider() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {categories.map((category) => (
-        <div key={category.name} className="mb-12">
+        <div key={category.name} id={category.name.toLowerCase().replace(/\s+/g, '-')} className="mb-12">
           <h2 className="text-3xl font-bold mb-4">{category.name}</h2>
           <div className="relative">
             {canScrollLeft && (

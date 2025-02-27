@@ -4,18 +4,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Camera } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
 
-  const services = [
-    "Maternity Photography",
-    "Newborn Sessions",
-    "Family Portraits",
-    "Studio Sessions"
-  ];
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        setCategories(data.map((category: { name: string }) => category.name));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,13 +111,13 @@ const Navbar = () => {
                     className="absolute top-full left-0 mt-2 w-56 bg-black/95 backdrop-blur-sm rounded-md overflow-hidden"
                     onMouseLeave={() => setIsServicesOpen(false)}
                   >
-                    {services.map((service, index) => (
+                    {categories.map((category, index) => (
                       <Link
                         key={index}
-                        href={`/services/${service.toLowerCase().replace(/\s+/g, '-')}`}
+                        href={`/blog?category=${category.toLowerCase().replace(/\s+/g, '-')}`}
                         className="block px-6 py-3 text-white hover:bg-pink-400/20 transition-colors duration-300 text-sm tracking-wide"
                       >
-                        {service}
+                        {category}
                       </Link>
                     ))}
                   </motion.div>
@@ -207,13 +218,13 @@ const Navbar = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="pl-4 space-y-2"
                       >
-                        {services.map((service, index) => (
+                        {categories.map((category, index) => (
                           <Link
                             key={index}
-                            href={`/services/${service.toLowerCase().replace(/\s+/g, '-')}`}
+                            href={`/services/${category.toLowerCase().replace(/\s+/g, '-')}`}
                             className="block text-white hover:text-pink-400 transition-colors duration-300 text-sm tracking-wider"
                           >
-                            {service}
+                            {category}
                           </Link>
                         ))}
                       </motion.div>
