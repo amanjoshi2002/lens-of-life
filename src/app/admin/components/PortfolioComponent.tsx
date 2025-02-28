@@ -192,7 +192,7 @@ const PortfolioComponent = () => {
             />
             <button
               onClick={() => handleRemovePhotoField(index)}
-              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+              className="bg-black text-white px-2 py-1 rounded hover:bg-gray-800"
             >
               Remove
             </button>
@@ -200,17 +200,13 @@ const PortfolioComponent = () => {
         ))}
         <button
           onClick={handleAddPhotoField}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
         >
           Add Photo
         </button>
         <button
           onClick={editingPortfolioId ? handleSaveChanges : handleAddPortfolio}
-          className={`${
-            editingPortfolioId ? "bg-blue-500" : "bg-green-500"
-          } text-white px-4 py-2 rounded hover:${
-            editingPortfolioId ? "bg-blue-600" : "bg-green-600"
-          }`}
+          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
         >
           {editingPortfolioId ? "Save Changes" : "Add Portfolio"}
         </button>
@@ -251,13 +247,13 @@ const PortfolioComponent = () => {
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => handleEditPortfolio(portfolio)}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                  className="bg-black text-white px-3 py-1 rounded hover:bg-gray-800"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeletePortfolio(portfolio._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  className="bg-black text-white px-3 py-1 rounded hover:bg-gray-800"
                 >
                   Delete
                 </button>

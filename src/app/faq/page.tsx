@@ -1,52 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Footer from '../../../components/Footer';
 import Hero from '../../../components/Hero1';
 import Navbar from '../../../components/Navbar';
 
+interface FAQ {
+  _id: string;
+  question: string;
+  answer: string;
+}
 
 export default function FAQ() {
-  const faqs = [
-    {
-      question: "What services do you offer?",
-      answer: "We offer a range of photography services including weddings, portraits, and events."
-    },
-    {
-      question: "How can I book a session?",
-      answer: "You can book a session by contacting us through our website or calling us directly."
-    },
-    {
-      question: "What is your pricing?",
-      answer: "Our pricing varies depending on the type of service. Please contact us for a detailed quote."
-    },
-    {
-      question: "Do you offer photo editing services?",
-      answer: "Yes, all our packages include professional photo editing."
-    },
-    {
-      question: "How long will it take to receive my photos?",
-      answer: "Typically, you will receive your photos within 2-4 weeks after the session."
-    }
-  ];
-
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const res = await fetch('/api/faqs');
+        const data = await res.json();
+        setFaqs(data);
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const filteredFaqs = faqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
-          <Navbar />
-
+      <Navbar />
       <Hero title="FAQ" subtitle="Your Questions Answered" />
-      <div className="pt-24 pb-24 bg-gray-50">
+      <div className="pt-24 pb-48 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-semibold text-center text-gray-800 mb-12">Frequently Asked Questions</h1>
+          
+          {/* Search Bar */}
+          <div className="mt-12 mb-8">
+            <input
+              type="text"
+              placeholder="Search FAQs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm mb-12"
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+            {filteredFaqs.map((faq, index) => (
+              <div key={faq._id} className="bg-white p-6 rounded-lg shadow-md">
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="flex justify-between items-center w-full text-left"
@@ -62,8 +74,8 @@ export default function FAQ() {
           </div>
         </div>
       </div>
+      <br/>
       <Footer />
-
     </>
   );
 }
